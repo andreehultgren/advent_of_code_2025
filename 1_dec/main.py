@@ -41,7 +41,7 @@ def _parse_rotation(rotation_string):
 def get_next_position(position: Position, rotation: Rotation, n_steps: int):
     "Combine a position and a rotation to get the next position"
 
-    # Check what direction we should rotate the safe
+    # =========== COMPUTE ROTATION ==============
     if rotation.direction == "right":
         new_location = position.number + rotation.number
     else:
@@ -53,13 +53,20 @@ def get_next_position(position: Position, rotation: Rotation, n_steps: int):
     # Extract how many times we pass the zero value
     passes_zero_times = round(abs((new_location - moduled_location) / n_steps))
 
-    # Manage some edge-cases
-    if position.number == 0 and rotation.direction == "left":
-        passes_zero_times -= 1
-    if rotation.direction == "left" and moduled_location == 0:
-        passes_zero_times += 1
+    # =========== EDGE CASES ==============
+    if rotation.direction == "left":
+        # If we rotate to the left, starting from 0
+        # (then we have already passed 0 in the previous rotation and counted it)
+        if position.number == 0:
+            passes_zero_times -= 1
+        # If we rotate to the left and stop at 0, then we count that rotation
+        if moduled_location == 0:
+            passes_zero_times += 1
+    # Q: Don't the two actions cancel eachother out?
+    # A: If we rotate left twice in a row and stop at 0, then yes.
+    # but if we rotate right to 0 and then back, then it matters.
 
-    # Update the aggregated counts
+    # =========== UPDATE AGGREGATION ==============
     new_zero_passes = position.total_zero_passes + passes_zero_times
     new_zero_stops = position.total_zero_stops
     if moduled_location == 0:
