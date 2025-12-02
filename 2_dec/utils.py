@@ -1,7 +1,7 @@
 import os
 
 
-def _extract_ranges(filename) -> str:
+def extract_ranges(filename) -> str:
     "Utility function to extract rotations"
     file_location = os.path.abspath(os.path.join(__file__, os.pardir, filename))
     with open(file_location, "r") as f:
@@ -9,7 +9,7 @@ def _extract_ranges(filename) -> str:
     return check_ranges
 
 
-def _split_string_into_partitions(target: str, n_partitions: int):
+def split_string_into_partitions(target: str, n_partitions: int):
     if (len(target) % n_partitions) != 0:
         return []
 
@@ -24,7 +24,7 @@ def _split_string_into_partitions(target: str, n_partitions: int):
     return partitions
 
 
-def _all_items_are_identical(list_of_values):
+def all_items_are_identical(list_of_values):
     if len(list_of_values) == 1:
         return True
 
@@ -38,7 +38,7 @@ def _all_items_are_identical(list_of_values):
 
 
 __all__ = [
-    "_extract_ranges",
-    "_split_string_into_partitions",
-    "_all_items_are_identical",
+    "extract_ranges",
+    "split_string_into_partitions",
+    "all_items_are_identical",
 ]

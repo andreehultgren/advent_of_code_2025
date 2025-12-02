@@ -1,10 +1,6 @@
 from dataclasses import dataclass
 
-from utils import (
-    _all_items_are_identical,
-    _extract_ranges,
-    _split_string_into_partitions,
-)
+from utils import all_items_are_identical, extract_ranges, split_string_into_partitions
 
 
 @dataclass
@@ -21,6 +17,7 @@ class Range:
 
 
 def get_list_of_partitions(target: str, max_partition_count=None):
+    "Extract a list of partitions (all possible partitions of a string)"
     list_of_partitions = []
     # Check how long the string is
     target_length = len(target)
@@ -32,13 +29,14 @@ def get_list_of_partitions(target: str, max_partition_count=None):
     # For each partition count, extract the combinations
     for n_partitions in range(2, range_end + 1):
         # Find all
-        partitions = _split_string_into_partitions(target, n_partitions)
+        partitions = split_string_into_partitions(target, n_partitions)
         if partitions:
             list_of_partitions.append(partitions)
     return list_of_partitions
 
 
 def is_invalid(number: int, is_part_two=False):
+    "Check if an ID (a number) is invalid"
     # Stringify the number:
     target = str(number)
 
@@ -51,12 +49,13 @@ def is_invalid(number: int, is_part_two=False):
 
     id_is_invalid = False
     for partitions in list_of_partitions:
-        if _all_items_are_identical(partitions):
+        if all_items_are_identical(partitions):
             id_is_invalid = True
     return id_is_invalid
 
 
 def find_invalid_ids(r: Range, is_part_two: bool):
+    "Find all invalid IDs for a given range"
     invalid_ids = []
 
     # Loop over all the potential numbers
@@ -68,7 +67,8 @@ def find_invalid_ids(r: Range, is_part_two: bool):
     return invalid_ids
 
 
-def parse_check_ranges(check_range: str, is_part_two: bool):
+def get_sum_of_invalid_ids(check_range: str, is_part_two: bool):
+    "The main solver for the issue. Sum the IDs and return it"
     # Ranges are split by ","
     ranges = [Range.from_string(r) for r in check_range.split(",")]
 
@@ -81,8 +81,8 @@ def parse_check_ranges(check_range: str, is_part_two: bool):
 
 
 def main(filename: str, is_part_two):
-    input_string = _extract_ranges(filename)
-    results = parse_check_ranges(input_string, is_part_two)
+    input_string = extract_ranges(filename)
+    results = get_sum_of_invalid_ids(input_string, is_part_two)
     print("Results:", results)
 
 
